@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载工具 v1.3</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #3a7bd5, #3a6073);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background: #f1f1f1;
+            color: #333;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, select:focus {
+            outline: none;
+            background: #e9e9e9;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .refresh-button {
+            background-color: #28a745;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .refresh-button:hover {
+            background-color: #218838;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+        }
+
+        .messages li {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        p#folder-size {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #333;
+            text-align: center;
+        }
+
+        /* 点击后添加的样式 */
+        p#folder-size.active {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        function checkFolderSize() {
+            fetch('/folder_size')
+                .then(response => response.text())
+                .then(text => {
+                    var folderSizeElement = document.getElementById('folder-size');
+                    folderSizeElement.innerText = text;
+                    folderSizeElement.classList.add('active'); // 点击后添加类
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>下载工具 v1.3</h1>
+        <form method="post">
+            <label for="password">请输入密码:</label>
+            <input type="password" id="password" name="password" placeholder="输入密码" required>
+
+            <label for="url">请输入 URL:</label>
+            <input type="text" id="url" name="url" placeholder="http://example.com/xxx" required>
+            
+            <label for="option">选择下载类型:</label>
+            <select id="option" name="option" required>
+                <option value="allpicture">下载图片</option>
+                <option value="wgetzip">下载压缩文件</option>
+                <option value="megafile">下载 Mega 文件</option>  <!-- 新增选项 -->
+            </select>
+
+            <div class="button-group">
+                <button type="submit">提交</button>
+                <button type="button" class="refresh-button" onclick="window.location.reload();">刷新</button>
+                <button type="button" onclick="checkFolderSize();">查看文件大小</button>
+            </div>
+        </form>
+        
+        <p id="folder-size"></p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
