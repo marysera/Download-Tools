@@ -3,7 +3,7 @@
 使用PYTHON Flask 可以在所有环境运行
 支持云服务器下载
 
-'''python app.py'''
+```python app.py```
 
 运行后访问 http://127.0.0.1:5000/
 
